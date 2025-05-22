@@ -22,7 +22,7 @@ export type ImageType = {
 
 function App() {
   const [images, setImages] = useState<ImageType[]>([]);
-  const [query, setQuery] = useState<string>("Love");
+  const [query, setQuery] = useState<string>("Cat");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
