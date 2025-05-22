@@ -1,20 +1,32 @@
 import { useEffect, useState } from "react";
 import styles from "./App.module.css";
-import ImageGallery from "./ImageGallery";
-import { fetchImages } from "../services/api";
-import SearchBar from "./SearchBar";
-import Loader from "./Loader";
-import ErrorMessage from "./ErrorMessage";
-import LoadMoreBtn from "./LoadMoreBtn";
-import ImageModal from "./ImageModal";
+import ImageGallery from "../ImageGallery/ImageGallery";
+import SearchBar from "../SearchBar/SearchBar";
+import Loader from "../Loader/Loader";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
+import ImageModal from "../ImageModal/ImageModal";
+import { fetchImages } from "../../services/api";
+
+export type ImageType = {
+  id: string;
+  alt_description: string | null;
+  urls: {
+    small: string;
+    regular: string;
+  };
+  user: {
+    name: string;
+  };
+};
 
 function App() {
-  const [images, setImages] = useState([]);
-  const [query, setQuery] = useState("Love");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [page, setPage] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [images, setImages] = useState<ImageType[]>([]);
+  const [query, setQuery] = useState<string>("Love");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -22,9 +34,13 @@ function App() {
       setError(false);
       try {
         setLoading(true);
-        const data = await fetchImages(query, page, abortController.signal);
+        const data = await fetchImages<{ results: ImageType[] }>(
+          query,
+          page,
+          abortController.signal
+        );
         setImages((prevImages) => [...prevImages, ...data]);
-      } catch (err) {
+      } catch (err: any) {
         if (err.name === "CanceledError") {
           return;
         }
@@ -34,17 +50,18 @@ function App() {
         setLoading(false);
       }
     };
+
     getData();
     return () => abortController.abort();
   }, [query, page]);
 
-  const handleSubmit = (newQuery) => {
+  const handleSubmit = (newQuery: string) => {
     setQuery(newQuery);
     setPage(1);
     setImages([]);
   };
 
-  const handleImageClick = (imageUrl) => {
+  const handleImageClick = (imageUrl: string) => {
     setSelectedImage(imageUrl);
   };
 

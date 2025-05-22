@@ -1,6 +1,11 @@
+import { ImageType } from "../App/App";
 import styles from "./ImageCard.module.css";
 
-const ImageCard = ({ image }) => {
+type Props = {
+  image: ImageType;
+};
+
+const ImageCard = ({ image }: Props) => {
   return (
     <div>
       <img
