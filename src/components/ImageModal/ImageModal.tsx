@@ -4,11 +4,12 @@ import styles from "./ImageModal.module.css";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  imageUrl: string;
+  imageUrl: string | null;
 };
 
 Modal.setAppElement("#root");
 const ImageModal = ({ isOpen, onClose, imageUrl }: Props) => {
+  if (!imageUrl) return null;
   return (
     <Modal
       isOpen={isOpen}
